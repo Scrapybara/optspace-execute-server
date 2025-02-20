@@ -32,14 +32,16 @@ app.get('/screenshot', async (req, res) => {
     // Clean up the temporary file
     await fs.unlink(screenshotPath);
 
-    res.json({ image: base64Image });
+    const width = await screen.width();
+    const height = await screen.height();
+    res.json({ image: base64Image, width: width, height: height });
   } catch (error) {
     console.error("Screenshot error:", error);
     res.status(500).json({ error: String(error) });
   }
 });
 
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 3000; 
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });
