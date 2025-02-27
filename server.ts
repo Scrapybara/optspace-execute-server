@@ -1,5 +1,5 @@
 import express from 'express';
-import { execute } from './execute';
+import { execute, ExecuteRequest } from './execute';
 import { screen } from '@nut-tree/nut-js';
 import path from 'path';
 import fs from 'fs/promises';
@@ -10,9 +10,10 @@ app.use(express.json());
 app.post('/execute', async (req, res) => {
   try {
     const { computerRequest, screenWidth, screenHeight, normalFactor } = req.body;
-    await execute({ computerRequest, screenWidth, screenHeight, normalFactor });
+    await execute({ computerRequest, screenWidth, screenHeight, normalFactor } as ExecuteRequest);
     res.json({ success: true });
   } catch (error) {
+    console.error("Execute error:", error);
     res.status(500).json({ error: String(error) });
   }
 });
@@ -41,7 +42,7 @@ app.get('/screenshot', async (req, res) => {
   }
 });
 
-const PORT = process.env.PORT || 3000; 
+const PORT = process.env.PORT || 3000; 
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });
